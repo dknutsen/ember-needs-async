@@ -1,0 +1,6 @@
+{{yield (hash
+  taskInstance=this.needs
+  loading=(component "needs-async-state" state="isRunning" taskInstance=this.needs)
+  loaded=(component "needs-async-state" state="value" taskInstance=this.needs)
+  error=(component "needs-async-state" state="error" taskInstance=this.needs) 
+)}}

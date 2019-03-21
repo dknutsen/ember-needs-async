@@ -3,7 +3,7 @@
 ## Installation
 
 * `git clone <repository-url>`
-* `cd ember-async-providers`
+* `cd ember-needs-async`
 * `npm install`
 
 ## Linting

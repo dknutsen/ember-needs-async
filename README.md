@@ -1,4 +1,4 @@
-ember-async-providers
+ember-needs-async
 ==============================================================================
 
 [Short description of the addon.]
@@ -15,7 +15,7 @@ Installation
 ------------------------------------------------------------------------------
 
 ```
-ember install ember-async-providers
+ember install ember-needs-async
 ```
 
 
