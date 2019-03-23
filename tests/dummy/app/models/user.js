@@ -4,6 +4,7 @@ import { computed } from '@ember/object';
 export default DS.Model.extend({
   firstName: DS.attr(),
   lastName: DS.attr(),
+  avatar: DS.attr(),
 
   friends: DS.hasMany('user'),
 

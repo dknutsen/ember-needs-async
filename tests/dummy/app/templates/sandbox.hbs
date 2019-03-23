@@ -1,0 +1,51 @@
+<h1>Sandbox</h1>
+
+<NeedsAsync @needs={{async-all (array
+  (find-record "user" "1")
+  (find-record "user" "2")
+  (find-record "user" "3")
+)}} as |States|>
+  <#States.loading>
+    Loading...
+  </States.loading>
+
+  <#States.loaded as |users|>
+    {{#each users as |user|}}
+      {{user.fullName}},
+    {{/each}}
+  </States.loaded>
+</NeedsAsync>
+
+
+<NeedsAsync @needs={{async-hash (hash
+  carol=(find-record "user" "1")
+  carl=(find-record "user" "2")
+  cambert=(find-record "user" "3")
+)}} as |States|>
+  <#States.loading>
+    Loading...
+  </States.loading>
+
+  <#States.loaded as |users|>
+    {{#each-in users as |name user|}}
+      {{name}}:{{user.fullName}},
+    {{/each-in}}
+  </States.loaded>
+</NeedsAsync>
+
+<div>
+  QUERY:
+  <NeedsAsync @needs={{query "user" (hash page="2" size="5")}} as |States|>
+    <#States.loading>
+      Loading...
+    </States.loading>
+  
+    <#States.loaded as |users|>
+      {{#each users as |user|}}
+        {{user.fullName}},
+      {{/each}}
+    </States.loaded>
+  </NeedsAsync>
+</div>
+
+{{outlet}}

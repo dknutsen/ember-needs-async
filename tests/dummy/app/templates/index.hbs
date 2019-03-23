@@ -1,0 +1,64 @@
+<h1>Main</h1>
+
+<button onclick={{action "onClick"}}>
+  Button
+  {{#needs-async needs=this.taskInstance as |states|}}
+    {{#states.loading}}loading...{{/states.loading}}
+    {{#states.loaded as |value|}}{{value}}{{/states.loaded}}
+    {{#states.error as |error|}}{{error}}{{/states.error}}
+  {{/needs-async}}
+</button>
+
+<div>
+  <div>
+    {{input value=userid}}
+  </div>
+   
+  <div>
+    <NeedsAsync @needs={{find-record "user" userid}} as |states|>
+      {{#states.loading}}LOADING THE USER{{/states.loading}}
+    
+      {{#states.loaded as |user|}}
+        <img src={{user.avatar}} alt="{{user.fullName}} profile picture">
+        {{user.lastName}}, {{user.firstName}}
+        <div>
+          <NeedsAsync @needs={{belongs-to user "company"}} as |states|>
+            {{#states.loading}}LOADING COMPANY{{/states.loading}}
+            {{#states.loaded as |company|}}
+              <div>
+                <div>{{company.name}} - {{company.motto}}</div>
+                <div>{{company.street}} {{company.city}} {{company.state}} {{company.zip}}</div>
+              </div>
+            {{/states.loaded}}
+          </NeedsAsync>
+          <NeedsAsync @needs={{has-many user "friends"}} as |states|>
+            {{#states.loading}}LOADING FRIENDS{{/states.loading}}
+            {{#states.loaded as |friends|}}
+              <div>
+                {{#each friends as |friend|}}
+                  {{friend.fullName}},
+                {{/each}} 
+              </div>
+            {{/states.loaded}}
+          </NeedsAsync>
+        </div>
+      {{/states.loaded}}
+  
+      {{#states.error as |error|}}
+        There was an error: {{error}}
+      {{/states.error}}
+    </NeedsAsync>
+    <div>
+      <NeedsAsync @needs={{peek-all "user"}} as |States|>
+        <#States.loaded as |users|>
+          Loaded users: {{users.length}} 
+        </States.loaded>
+      </NeedsAsync>
+    </div>
+  </div>
+
+
+</div>
+
+
+{{outlet}}
