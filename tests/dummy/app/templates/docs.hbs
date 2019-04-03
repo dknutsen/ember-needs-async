@@ -1,0 +1,24 @@
+{{#docs-viewer as |viewer|}}
+  {{#viewer.nav as |nav|}}
+    {{nav.section "The Basics"}}
+    {{nav.item "Introduction" "docs.index"}}
+    {{nav.item "Usage" "docs.usage"}}
+
+    {{nav.section "Components"}}
+    {{nav.item "needs-async" "docs.needs-async"}}
+
+    {{nav.section "Helpers"}}
+    {{nav.item "find-record" "docs.find-record"}}
+    {{nav.item "find-all" "docs.find-all"}}
+    {{nav.item "peek-record" "docs.peek-record"}}
+    {{nav.item "peek-all" "docs.peek-all"}}
+    {{nav.item "belongs-to" "docs.belongs-to"}}
+    {{nav.item "has-many" "docs.has-many"}}
+    {{nav.item "async-all" "docs.async-all"}}
+    {{nav.item "async-hash" "docs.async-hash"}}
+  {{/viewer.nav}}
+
+  {{#viewer.main}}
+    {{outlet}}
+  {{/viewer.main}}
+{{/docs-viewer}}

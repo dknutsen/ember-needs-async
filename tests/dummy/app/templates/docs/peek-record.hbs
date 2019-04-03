@@ -1,0 +1,22 @@
+<h1>peek-record helper</h1>
+
+<p>The peek-record helper takes a model type and an id and returns an ember concurrency task that resolves to a record. It is exactly the same as store.peekRecord(). (Hint: if no record appears try navigating to {{#link-to "docs.find-record"}}the find-record helper{{/link-to}})</p>
+
+{{#docs-demo as |demo|}}
+  {{#demo.example name="peek-record-demo.hbs"}}
+
+    <h2>One User</h2>
+    <NeedsAsync @needs={{peek-record "user" "1"}} as |States|>
+      <States.loading>
+        Loading user...
+      </States.loading>
+    
+      <States.loaded as |user|>
+        <div>{{user.fullName}}</div>
+      </States.loaded>
+    </NeedsAsync>
+
+  {{/demo.example}}
+
+  {{demo.snippet name="peek-record-demo.hbs"}}
+{{/docs-demo}}

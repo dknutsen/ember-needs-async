@@ -1,0 +1,34 @@
+<h1>belongs-to</h1>
+
+<p>The belongs-to helper takes a model and a relationship name and returns an ember concurrency task that resolves to the value of the relationship once loaded.</p>
+
+{{#docs-demo as |demo|}}
+  {{#demo.example name="belongs-to-demo.hbs"}}
+
+    <h2>User Company Details</h2>
+    <NeedsAsync @needs={{find-record "user" "4"}} as |States|>
+      <States.loading>LOADING USER</States.loading>
+
+      <States.loaded as |user|>
+        <NeedsAsync @needs={{belongs-to user "company"}} as |States|>
+          <States.loading>LOADING COMPANY DATA</States.loading>
+
+          <States.loaded as |company|>
+            <div>
+              <div>{{company.name}} - {{company.motto}}</div>
+              <div>
+                {{company.street}}
+                {{company.city}}
+                {{company.state}}
+                {{company.zip}}
+              </div>
+            </div>
+          </States.loaded>
+        </NeedsAsync>
+      </States.loaded>
+    </NeedsAsync>
+
+  {{/demo.example}}
+
+  {{demo.snippet name="belongs-to-demo.hbs"}}
+{{/docs-demo}}

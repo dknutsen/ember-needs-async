@@ -1,6 +1,8 @@
-<nav class="w-full h-8 bg-grey-light">
-  {{#link-to 'index'}}Main{{/link-to}}
-  {{#link-to 'sandbox'}}Sandbox{{/link-to}}
-</nav>
+{{#docs-header as |header|}}
+  {{#header.link "examples"}}Examples{{/header.link}}
+  {{!--
+  {{#header.link "sandbox"}}Sandbox{{/header.link}}
+  --}}
+{{/docs-header}}
 
 {{outlet}}

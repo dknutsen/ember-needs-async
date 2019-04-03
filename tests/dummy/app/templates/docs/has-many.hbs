@@ -1,0 +1,28 @@
+<h1>has-many</h1>
+
+<p>The has-many helper takes a model and a relationship name and returns an ember concurrency task that resolves to the value of the relationship once loaded.</p>
+
+{{#docs-demo as |demo|}}
+  {{#demo.example name="has-many-demo.hbs"}}
+
+    <h2>Company Employees</h2>
+    <NeedsAsync @needs={{find-record "organization" "1"}} as |States|>
+      <States.loading>LOADING COMPANY</States.loading>
+
+      <States.loaded as |company|>
+        <NeedsAsync @needs={{has-many company "employees"}} as |States|>
+          <States.loading>LOADING USERS</States.loading>
+
+          <States.loaded as |users|>
+            {{#each users as |user|}}
+              <div>{{user.fullName}}</div>
+            {{/each}}
+          </States.loaded>
+        </NeedsAsync>
+      </States.loaded>
+    </NeedsAsync>
+
+  {{/demo.example}}
+
+  {{demo.snippet name="has-many-demo.hbs"}}
+{{/docs-demo}}
