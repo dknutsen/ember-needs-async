@@ -1,0 +1,22 @@
+<h1>find-record helper</h1>
+
+<p>The find-record helper takes a model type and an id and returns an ember concurrency task that resolves to a record. It is exactly the same as store.findRecord().</p>
+
+{{#docs-demo as |demo|}}
+  {{#demo.example name="find-record-demo.hbs"}}
+
+    <h2>One User</h2>
+    <NeedsAsync @needs={{find-record "user" "1"}} as |States|>
+      <States.loading>
+        Loading user...
+      </States.loading>
+    
+      <States.loaded as |user|>
+        <div>{{user.fullName}}</div>
+      </States.loaded>
+    </NeedsAsync>
+
+  {{/demo.example}}
+
+  {{demo.snippet name="find-record-demo.hbs"}}
+{{/docs-demo}}

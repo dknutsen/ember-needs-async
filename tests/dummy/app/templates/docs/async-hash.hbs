@@ -1,0 +1,27 @@
+<h1>async-hash helper</h1>
+
+<p>The async-hash helper takes a hash of tasks and yields a task that finishes when all of the subtasks finish. It is exactly the same as the ember-concurrency hash task.</p>
+
+{{#docs-demo as |demo|}}
+  {{#demo.example name="async-hash-demo.hbs"}}
+    <h2>Three users with labels</h2>
+    <NeedsAsync @needs={{async-hash (hash
+      user1=(find-record "user" "1")
+      user2=(find-record "user" "2")
+      user3=(find-record "user" "3")
+    )}} as |States|>
+      <States.loading>
+        Loading...
+      </States.loading>
+    
+      <States.loaded as |users|>
+        {{#each-in users as |label user|}}
+          <div>{{label}}: {{user.fullName}}</div>
+        {{/each-in}}
+      </States.loaded>
+    </NeedsAsync>
+
+  {{/demo.example}}
+
+  {{demo.snippet name="async-hash-demo.hbs"}}
+{{/docs-demo}}

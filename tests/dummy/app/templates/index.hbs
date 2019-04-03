@@ -1,3 +1,42 @@
+{{docs-hero logo="ember"}}
+
+<div class="docs-container docs-pt-8">
+  <h2>A simple example</h2>
+  
+  <p>Here is a simple example that loads a user record from the "backend" using the provided id and displays the name and avatar once it is loaded.</p>
+  
+  {{#docs-demo as |demo|}}
+    {{#demo.example name="main-demo.hbs"}}
+      {{input
+        value=userid
+        type="number" min=1 max=13
+        class="docs-mb-2 docs-p-2 docs-w-48 docs-border docs-border-grey"
+        placeholder="enter a user id"
+      }}
+  
+      <div class="docs-p-2 docs-h-12 docs-shadow-lg docs-flex docs-items-center">
+        <NeedsAsync @needs={{find-record "user" userid}} as |States|>
+          {{#unless userid}}Type a user id in the input above{{/unless}}
+          <States.loading>
+            Loading user data...
+          </States.loading>
+          <States.loaded as |user|>
+            <img src={{user.avatar}} alt="{{user.fullName}} avatar" class="docs-h-8 docs-rounded-full docs-mr-2">
+            {{user.fullName}}
+          </States.loaded>
+          <States.error>
+            There was a problem loading user with id {{userid}}
+          </States.error>
+        </NeedsAsync>
+      </div>
+    {{/demo.example}}
+  
+    {{demo.snippet "main-demo.hbs"}}
+  {{/docs-demo}}
+</div>
+
+
+{{!--
 <h1>Main</h1>
 
 <button onclick={{action "onClick"}}>
@@ -59,6 +98,6 @@
 
 
 </div>
-
+--}}
 
 {{outlet}}

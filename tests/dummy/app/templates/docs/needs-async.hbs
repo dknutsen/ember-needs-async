@@ -1,0 +1,42 @@
+<h1>needs-async component</h1>
+
+<p>The needs-async component is a tagless (renders nothing in the DOM) provider component that accepts an ember concurrency task instance as an argument (called @needs) and yields three "states" (loading, loaded, error) that render their blocks based on the state of the "needs" task. It also yields the taskInstance. The "loaded" state will yield the value of the task, the "error" state will yield any errors, and the "loading" state yields nothing.</p>
+
+<p>While this component is intended to be used with the helpers provided by this addon it can also be used with any ember-concurrency task instance, as demonstrated in the example below.</p>
+
+{{#docs-demo as |demo|}}
+  {{#demo.example name="needs-async-demo.hbs"}}
+
+    <button onclick={{action "onClick"}} class="docs-p-2 docs-shadow-lg">
+      Click for random number:
+      <NeedsAsync @needs={{this.taskInstance}} as |States|>
+        <States.loading>
+          loading...
+        </States.loading>
+        <States.loaded as |value|>
+          {{value}}
+        </States.loaded>
+        <States.error as |error|>
+          {{error}}
+        </States.error>
+      </NeedsAsync>
+    </button>
+
+    {{!-- task looks like this:
+      randomNum: task(function * () {
+        yield timeout(1000);
+        this.set('result', Math.random());
+        return this.result;
+      }).drop(),
+    
+      actions: {
+        onClick() {
+          this.set('taskInstance', this.randomNum.perform());
+        }
+      }
+    --}}
+
+  {{/demo.example}}
+
+  {{demo.snippet name="needs-async-demo.hbs"}}
+{{/docs-demo}}

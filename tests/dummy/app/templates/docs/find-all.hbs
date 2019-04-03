@@ -1,0 +1,24 @@
+<h1>find-all helper</h1>
+
+<p>The find-all helper takes a model type and returns an ember concurrency task which will resolve to an array of models. It is the same as store.findAll().</p>
+
+{{#docs-demo as |demo|}}
+  {{#demo.example name="find-all-demo.hbs"}}
+
+    <h2>All Users</h2>
+    <NeedsAsync @needs={{find-all "user"}} as |States|>
+      <States.loading>
+        Loading users...
+      </States.loading>
+    
+      <States.loaded as |users|>
+        {{#each users as |user|}}
+          <div>{{user.fullName}}</div>
+        {{/each}}
+      </States.loaded>
+    </NeedsAsync>
+
+  {{/demo.example}}
+
+  {{demo.snippet name="find-all-demo.hbs"}}
+{{/docs-demo}}

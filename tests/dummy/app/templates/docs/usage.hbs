@@ -1,0 +1,46 @@
+<h1>Usage</h1>
+
+<p>This is an example of a needs-async component that loads a specific user, and once the user is loaded another needs-async that loads the "company" relationship for the user and displays the data.</p>
+
+{{#docs-demo as |demo|}}
+  {{#demo.example name="usage-demo.hbs"}}
+
+    <NeedsAsync @needs={{find-record "user" "4"}} as |States|>
+      <States.loading>
+        LOADING USER DATA
+      </States.loading>
+    
+      <States.loaded as |user|>
+        {{user.lastName}}, {{user.firstName}}
+        <div>
+          <NeedsAsync @needs={{belongs-to user "company"}} as |States|>
+            <States.loading>
+              LOADING COMPANY DATA
+            </States.loading>
+
+            <States.loaded as |company|>
+              <div>
+                <div>{{company.name}} - {{company.motto}}</div>
+                <div>
+                  {{company.street}}
+                  {{company.city}}
+                  {{company.state}}
+                  {{company.zip}}
+                </div>
+              </div>
+            </States.loaded>
+          </NeedsAsync>
+        </div>
+      </States.loaded>
+  
+      <States.error as |error|>
+        ERROR STATE: {{error}}
+      </States.error>
+    </NeedsAsync>
+
+  {{/demo.example}}
+
+  {{demo.snippet name="usage-demo.hbs"}}
+{{/docs-demo}}
+
+<p>That's really all there is to it. The needs-async component takes an ember concurrency task (which all of the included helpers provide) and yields state components for rendering different data based on loading state, loaded state, and error state.</p>

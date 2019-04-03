@@ -1,0 +1,24 @@
+<h1>peek-all helper</h1>
+
+<p>The peek-all helper takes a model type and returns an ember concurrency task which will resolve to an array of models. It is the same as store.peekAll(). (Hint: if no users show up try navigating to {{#link-to "docs.find-all"}}the find-all helper{{/link-to}} and then back.)</p>
+
+{{#docs-demo as |demo|}}
+  {{#demo.example name="peek-all-demo.hbs"}}
+
+    <h2>All Users</h2>
+    <NeedsAsync @needs={{peek-all "user"}} as |States|>
+      <States.loading>
+        Loading users...
+      </States.loading>
+    
+      <States.loaded as |users|>
+        {{#each users as |user|}}
+          <div>{{user.fullName}}</div>
+        {{/each}}
+      </States.loaded>
+    </NeedsAsync>
+
+  {{/demo.example}}
+
+  {{demo.snippet name="peek-all-demo.hbs"}}
+{{/docs-demo}}
