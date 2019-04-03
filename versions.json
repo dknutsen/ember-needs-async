@@ -10,5 +10,17 @@
     "name": "master",
     "sha": "edd690deaf70ea34ed755d00cfd8d783dc53b273",
     "tag": null
+  },
+  "v0.1.0": {
+    "path": "versions/v0.1.0",
+    "name": "v0.1.0",
+    "sha": "edd690deaf70ea34ed755d00cfd8d783dc53b273",
+    "tag": "v0.1.0"
+  },
+  "-latest": {
+    "path": "",
+    "name": "Latest",
+    "sha": "edd690deaf70ea34ed755d00cfd8d783dc53b273",
+    "tag": "v0.1.0"
   }
 }
