@@ -4,5 +4,11 @@
     "name": "docs",
     "sha": "98c9ce770be612b10e36952d528e88b517d98324",
     "tag": null
+  },
+  "master": {
+    "path": "versions/master",
+    "name": "master",
+    "sha": "edd690deaf70ea34ed755d00cfd8d783dc53b273",
+    "tag": null
   }
 }
