@@ -6,21 +6,15 @@ import hbs from 'htmlbars-inline-precompile';
 module('Integration | Component | needs-async-state', function(hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+  test('it yields the correct state from the given task instance', async function(assert) {
+    this.set('taskInstance', { value: 5 });
 
-    await render(hbs`{{needs-async-state}}`);
-
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
     await render(hbs`
-      {{#needs-async-state}}
-        template block text
+      {{#needs-async-state state="value" taskInstance=taskInstance as |value|}}
+        {{value}}
       {{/needs-async-state}}
     `);
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.equal(this.element.textContent.trim(), '5', 'it correctly yields the correct taskInstance state');
   });
 });

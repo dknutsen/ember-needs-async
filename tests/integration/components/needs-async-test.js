@@ -5,25 +5,23 @@ import { render, resetOnerror, setupOnerror, settled, waitFor } from '@ember/tes
 import hbs from 'htmlbars-inline-precompile';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 
-module('Integration | Helper | query', function(hooks) {
+module('Integration | Component | needs-async', function(hooks) {
   setupRenderingTest(hooks);
   setupMirage(hooks);
 
   // TODO: there's probably a much better way to test this
-  test('it properly requests a model and exposes the task instance with value on success', async function(assert) {
+  test('it renders the loading and loaded states correctly for a successful task instance', async function(assert) {
     server.timing = 100;
-    let users = server.createList('user', 5);
+    let user = server.create('user');
     this.set('modelType', 'user');
+    this.set('id', '1');
+
     render(hbs`
       <div class="container">
-        {{#let (query modelType (hash foo=bar)) as |taskInstance|}}
-          {{#if taskInstance.isRunning}}loading{{/if}}
-          {{#if taskInstance.value}}
-            {{#each taskInstance.value as |user|}}
-              {{~user.firstName~}}
-            {{/each}}
-          {{/if}} 
-        {{/let}}
+        {{#needs-async needs=(find-record modelType id) as |states|}}
+          {{#states.loading}}loading{{/states.loading}}
+          {{#states.loaded as |user|}}{{user.firstName}}{{/states.loaded}}
+        {{/needs-async}}
       </div>
     `);
 
@@ -33,27 +31,29 @@ module('Integration | Helper | query', function(hooks) {
 
     await settled();
 
-    assert.equal(this.element.textContent.trim(), users.map(u => u.firstName).join(''), 'it exposes the model as the value when loaded');
+    assert.equal(this.element.textContent.trim(), user.firstName, 'it exposes the model as the value when loaded');
   });
 
-  // TODO: there's probably a much better way to test this
-  test('it properly requests a model and exposes the task instance with error state', async function(assert) {
-    server.get('/users', {errors: ['There was an error']}, 500);
 
+  // TODO: there's probably a much better way to test this
+  test('it renders the error state correctly for a task instance error', async function(assert) {
     setupOnerror(function(err) {
       assert.ok(err, 'An error is thrown');
     });
 
     server.timing = 100;
+    this.set('modelType', 'user');
+    this.set('id', '1');
 
     render(hbs`
       <div class="container">
-        {{#let (query "user" (hash foo=bar)) as |taskInstance|}}
-          {{#if taskInstance.isRunning}}loading{{/if}}
-          {{#if taskInstance.error}}ERROR{{/if}} 
-        {{/let}}
+        {{#needs-async needs=(find-record modelType id) as |states|}}
+          {{#states.loading}}loading{{/states.loading}}
+          {{#states.error as |error|}}ERROR{{/states.error}}
+        {{/needs-async}}
       </div>
     `);
+
     await waitFor('.container');
 
     assert.equal(this.element.textContent.trim(), 'loading', 'it exposes loading state');
@@ -66,6 +66,5 @@ module('Integration | Helper | query', function(hooks) {
       resetOnerror();
     })
   });
-
 
 });
