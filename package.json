@@ -1,6 +1,6 @@
 {
   "name": "ember-needs-async",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Declarative, composable primitives for loading and rendering async data directly from templates.",
   "keywords": [
     "ember-addon"

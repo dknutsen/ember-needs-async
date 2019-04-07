@@ -36,6 +36,28 @@ module('Integration | Helper | find-all', function(hooks) {
     assert.equal(this.element.textContent.trim(), users.map(u => u.firstName).join(''), 'it exposes the model as the value when loaded');
   });
 
+  test('it correctly passes findAll options to the backend', async function(assert) {
+    assert.expect(1);
+
+    server.timing = 100;
+    server.get('/users', (schema, request) => {
+      assert.equal(request.queryParams.include, 'company', 'the include paramter is passed to the backend');
+      return schema.users.all();
+    });
+
+    server.create('user');
+    this.set('modelType', 'user');
+
+    await render(hbs`
+      <div class="container">
+        {{#let (find-all modelType (hash include="company")) as |taskInstance|}}
+          {{#if taskInstance.isRunning}}loading{{/if}}
+          {{#if taskInstance.value}}{{taskInstance.value.firstObject.firstName}}{{/if}} 
+        {{/let}}
+      </div>
+    `);
+  });
+
   // TODO: there's probably a much better way to test this
   test('it properly requests a model and exposes the task instance with error state', async function(assert) {
     server.get('/users', {errors: ['There was an error']}, 500);
