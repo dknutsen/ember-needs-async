@@ -6,9 +6,9 @@ export default function(server) {
   */
   server.logging = true;
 
-  let friends = server.createList('user', 3);
-  let users = server.createList('user', 10, { friends });
   let companies = server.createList('organization', 3);
+  let friends = server.createList('user', 3, { company: companies[0] });
+  let users = server.createList('user', 10, { friends });
 
   users.forEach(user => {
     let ci = Math.floor(Math.random()*3);

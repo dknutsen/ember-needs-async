@@ -9,7 +9,9 @@ const Router = AddonDocsRouter.extend({
 
 Router.map(function() {
   this.route('sandbox');
-  this.route('examples');
+  this.route('examples', function() {
+    this.route('user-card');
+  });
   docsRoute(this, function() {
     this.route('index');
     this.route('usage');
