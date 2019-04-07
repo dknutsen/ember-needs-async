@@ -34,6 +34,28 @@ module('Integration | Helper | find-record', function(hooks) {
     assert.equal(this.element.textContent.trim(), user.firstName, 'it exposes the model as the value when loaded');
   });
 
+  test('it correctly passes an options hash to the findRecord method', async function(assert) {
+    assert.expect(1);
+
+    server.timing = 100;
+    server.get('/users/:id', (schema, request) => {
+      assert.equal(request.queryParams.include, 'company', 'the include paramter is passed to the backend');
+      return schema.users.find(request.params.id);
+    });
+
+    server.create('user');
+    this.set('modelType', 'user');
+    this.set('id', '1');
+
+    await render(hbs`
+      <div class="container">
+        {{#let (find-record modelType id (hash include="company")) as |taskInstance|}}
+          {{#if taskInstance.isRunning}}loading{{/if}}
+          {{#if taskInstance.value}}{{taskInstance.value.firstName}}{{/if}} 
+        {{/let}}
+      </div>
+    `);
+  });
 
   // TODO: there's probably a much better way to test this
   test('it properly requests a model and exposes the task instance with error state', async function(assert) {
