@@ -1,0 +1,76 @@
+{{!-- navbar - could be extracted to a component --}}
+<nav class="docs-flex docs-items-center docs-justify-between docs-flex-wrap docs-px-6 docs-py-3 docs-bg-grey-darker docs-text-white">
+  <div class="docs-flex docs-items-center docs-flex-no-shrink docs-mr-6">
+    {{fa-icon "id-badge"}}&nbsp;
+    <span class="docs-font-semibold docs-text-xl docs-tracking-tight">instaface</span>
+  </div>
+  <div class="docs-block lg:docs-hidden">
+    <button {{action (toggle "toggleNav" this)}} class="docs-flex docs-items-center docs-px-3 docs-py-2 docs-border docs-rounded docs-text-white docs-border-white">
+      <svg class="docs-fill-current docs-h-3 docs-w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+    </button>
+  </div>
+  <div class="docs-w-full docs-block docs-flex-grow lg:docs-flex lg:docs-items-center lg:docs-w-auto {{if toggleNav "docs-block" "docs-hidden"}}">
+    <div class="docs-text-sm lg:docs-flex-grow">
+    </div>
+    <div>
+      <a href="#" class="docs-inline-block docs-text-sm docs-px-4 docs-py-2 docs-leading-none docs-border docs-rounded docs-text-white docs-border-white docs-mt-4 lg:docs-mt-0">{{fa-icon "bell"}}</a>
+    </div>
+  </div>
+</nav>
+
+{{!-- main content container, split in three parts, middle largest --}}
+<div class="docs-flex">
+
+  {{!-- left "sidebar" area --}}
+  <div class="docs-w-1/5">
+
+    <NeedsAsync @needs={{this.model.me}} as |States|>
+      <div class="docs-w-full docs-flex docs-flex-col docs-justify-center">
+        <States.loading>
+          <div class="docs-text-large-2 docs-text-center docs-bg-grey-lighter">
+            {{fa-icon "spinner" spin=true}} Loading me
+          </div>
+        </States.loading>
+        <States.loaded as |me|> 
+
+          {{!-- "me" card --}}
+          {{#link-to "examples.non-blocking-models.child" me.id class="docs-py-1 docs-px-2 docs-flex docs-items-center docs-mb-4" activeClass="docs-border-grey docs-border-l-4"}}
+            <div class="md:docs-flex md:docs-items-center docs-px-3 docs-py-3">
+              <img class="docs-block docs-h-8 md:docs-h-12 docs-mx-auto mb-4 md:docs-mb-0 md:docs-mr-4 md:docs-ml-0" src={{me.avatar}} alt="{{me.avatar}} avatar">
+              <div class="docs-text-center md:docs-text-left md:docs-flex-grow">
+                <div class="">
+                  <p class="docs-leading-tight docs-text-xxs md:docs-text-sm">{{me.fullName}}</p>
+                  <p class="docs-hidden md:docs-block docs-text-xxs docs-leading-tight docs-text-grey-dark">{{me.company.name}}</p>
+                </div>
+              </div>
+            </div>
+          {{/link-to}}
+
+          {{!-- friends list --}}
+          <NeedsAsync @needs={{has-many me "friends"}} as |States|>
+            <States.loading>
+              <div class="docs-text-large-2 docs-text-center docs-bg-grey-lighter">
+                {{fa-icon "spinner" spin=true}} Loading friends
+              </div>
+            </States.loading>
+            <States.loaded as |friends|>
+              {{#each (sort-by "lastName" friends) as |friend|}}
+                {{#link-to "examples.non-blocking-models.child" friend.id class="docs-py-1 docs-px-2 docs-flex docs-items-center" activeClass="docs-border-grey docs-border-l-4"}}
+                  <img src={{friend.avatar}} alt="{{friend.fullName}} avatar" class="docs-h-4 docs-rounded-full docs-mr-2">
+                  {{friend.fullName}}
+                {{/link-to}}
+              {{/each}}
+            </States.loaded>
+          </NeedsAsync>
+          
+        </States.loaded>
+      </div>
+    </NeedsAsync>
+  </div>
+
+  {{!-- wrapper for the child route, which holds the main content and "right sidebar" --}}
+  <div class="docs-w-4/5">
+    {{outlet}}
+  </div>
+
+</div>

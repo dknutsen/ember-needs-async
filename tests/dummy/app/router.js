@@ -11,6 +11,9 @@ Router.map(function() {
   this.route('sandbox');
   this.route('examples', function() {
     this.route('user-card');
+    this.route('non-blocking-models', function() {
+      this.route('child', { path: '/:id' });
+    });
   });
   docsRoute(this, function() {
     this.route('index');

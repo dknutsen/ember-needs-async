@@ -27,9 +27,7 @@
         </div>
       </div>
       <div class="docs-flex docs-flex-wrap docs-justify-center docs-p-2">
-        {{#unless friendsLoaded}}
-          <button {{action (toggle "friendsLoaded" this)}} class="docs-text-sm docs-py-2 docs-font-semibold docs-rounded-full docs-bg-white">View Friends</button>
-        {{else}}
+        {{#if friendsLoaded}}
           <NeedsAsync @needs={{has-many user "friends"}} as |States|>
             <States.loading>
               {{fa-icon "spinner" spin=true class="docs-text-large-5"}}
@@ -42,7 +40,9 @@
               {{/each}}
             </States.loaded>
           </NeedsAsync>
-        {{/unless}}
+        {{else}}
+          <button {{action (toggle "friendsLoaded" this)}} class="docs-text-sm docs-py-2 docs-font-semibold docs-rounded-full docs-bg-white">View Friends</button>
+        {{/if}}
       </div>
     </States.loaded>
   </div>

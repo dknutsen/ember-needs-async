@@ -1,0 +1,94 @@
+<div class="docs-flex">
+  
+  {{!-- center "main content" area --}}
+  <div class="docs-w-3/4 docs-p-4">
+
+    <NeedsAsync @needs={{this.model.user}} as |States|>
+      <States.loading>
+        <div class="docs-text-large-5 docs-text-center docs-bg-grey-lighter">
+          {{fa-icon "spinner" spin=true}} Loading user
+        </div>
+      </States.loading>
+      <States.loaded as |user|>
+        <div class="docs-flex docs-justify-between docs-mb-4">
+          <h1>{{user.fullName}}</h1>
+          <img class="docs-h-8 md:docs-h-16" src={{user.avatar}} alt="{{user.avatar}} avatar"> 
+        </div>
+  
+        <NeedsAsync @needs={{belongs-to user "company"}} as |States|>
+          <States.loading>
+            <div class="docs-bg-grey-lighter">
+              {{fa-icon "spinner" spin=true}} Loading company
+            </div>
+          </States.loading>
+          <States.loaded as |company|>
+            <div>Works at {{company.name}}</div>
+          </States.loaded>
+        </NeedsAsync> 
+      </States.loaded>
+    </NeedsAsync> 
+  
+    {{!-- mutual friends (could nest this in the above needs-async but this keeps things flatter) --}}
+    <NeedsAsync @needs={{async-hash (hash
+      myFriends=(has-many this.model.me.value "friends")
+      theirFriends=(has-many this.model.user.value "friends")
+    )}} as |States|>
+      <States.loading>
+        <div class="docs-text-large-5 docs-text-center docs-bg-grey-lighter">
+          {{fa-icon "spinner" spin=true}} Loading mutual friends
+        </div>
+      </States.loading>
+      <States.loaded as |data|>
+        <div>Mutual Friends</div>
+        {{!-- intersect helper doesn't seem to work right with models --}}
+        {{#each (sort-by "lastName" (without (without data.theirFriends data.myFriends) data.myFriends)) as |mutualFriend|}}
+          <div class="docs-py-1 docs-px-2 docs-flex docs-items-center">
+            <img src={{mutualFriend.avatar}} alt="{{mutualFriend.fullName}} avatar" class="docs-h-4 docs-rounded-full docs-mr-2">
+            {{mutualFriend.fullName}}
+          </div>
+        {{/each}}
+      </States.loaded>
+    </NeedsAsync> 
+  
+  </div>
+  
+  
+  {{!-- right "sidebar" area --}}
+  <div class="docs-w-1/4 docs-p-2 docs-shadow-md">
+    <div class="docs-text-xs docs-mb-2">Messages</div> 
+ 
+    {{!-- guarantee we have both users loaded before querying messages --}}
+    <NeedsAsync @needs={{async-hash (hash me=this.model.me user=this.model.user)}} as |States|>
+      <States.loaded as |people|>
+
+        {{!-- load messages between "me" and selected user --}}
+        <NeedsAsync @needs={{async-hash (hash
+          themToMe=(query "message" (hash sender=people.user.id receiver=people.me.id))
+          meToThem=(query "message" (hash sender=people.me.id receiver=people.user.id))
+        )}} as |States|>
+          <States.loading>
+            <div class="docs-text-large-2 docs-text-center docs-bg-grey-lighter">
+              {{fa-icon "spinner" spin=true}} Loading messages
+            </div>
+          </States.loading>
+          <States.loaded as |messages|>
+            {{#each (sort-by "sent" (union messages.themToMe messages.meToThem)) as |message|}}
+              {{#let (eq people.me.id message.sender.id) as |fromMe|}}
+                <div class="docs-text-xxs docs-mb-1 docs-flex {{if fromMe "docs-justify-end"}}">
+                  <div class="{{if fromMe "docs-bg-grey-darkest docs-text-white" "docs-bg-grey-lighter"}} docs-p-1 docs-rounded-lg docs-max-w-2/3">
+                    {{message.message}}
+                  </div>
+                </div>
+              {{/let}}
+            {{else}}
+              <div>No messages to show</div>
+            {{/each}}
+
+          </States.loaded>
+        </NeedsAsync> 
+  
+      </States.loaded>
+    </NeedsAsync> 
+   
+  </div>
+</div>
