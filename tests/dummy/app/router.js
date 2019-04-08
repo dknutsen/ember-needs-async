@@ -15,15 +15,18 @@ Router.map(function() {
   docsRoute(this, function() {
     this.route('index');
     this.route('usage');
+    // components
     this.route('needs-async');
-    this.route('find-record');
-    this.route('find-all');
-    this.route('peek-record');
-    this.route('peek-all');
-    this.route('belongs-to');
-    this.route('has-many');
+    // helpers
     this.route('async-all');
     this.route('async-hash');
+    this.route('belongs-to');
+    this.route('find-record');
+    this.route('find-all');
+    this.route('has-many');
+    this.route('peek-record');
+    this.route('peek-all');
+    this.route('timeout');
   });
   this.route('not-found', { path: '/*path' });
 });
