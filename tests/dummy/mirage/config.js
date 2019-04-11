@@ -21,4 +21,16 @@ export default function() {
 
   this.get('/organizations');
   this.get('organizations/:id');
+
+  this.get('/messages', ({ messages }, request) => {
+    let sid = request.queryParams.sender;
+    let rid = request.queryParams.receiver;
+    let filtered = messages.all().filter((message) => {
+      let matches = true;
+      matches = matches && (!sid || sid === message.senderId);
+      matches = matches && (!rid || rid === message.receiverId);
+      return matches;
+    });
+    return filtered;
+  });
 }

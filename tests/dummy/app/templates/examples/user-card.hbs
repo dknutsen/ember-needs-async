@@ -1,0 +1,50 @@
+<h1>User Card</h1>
+
+<p class="docs-pb-4">This is an example of a user card with a button that asynchronously loads the users friends.</p>
+
+{{input
+  value=userid
+  type="number" min=1 max=13
+  class="docs-mb-2 docs-p-2 docs-w-48 docs-border docs-border-grey"
+  placeholder="enter a user id"
+}}
+
+<NeedsAsync @needs={{find-record "user" userid (hash include="company")}} as |States|>
+  <div class="docs-bg-white docs-mx-auto docs-max-w-sm docs-shadow-lg docs-rounded-lg docs-overflow-hidden">
+    <States.loading>
+      <div class="docs-text-jumbo-2 docs-text-center">
+        {{fa-icon "spinner" spin=true}}
+      </div>
+    </States.loading>
+    <States.loaded as |user|>
+      <div class="sm:docs-flex sm:docs-items-center docs-px-6 docs-py-4">
+        <img class="docs-block docs-h-16 sm:docs-h-24 docs-rounded-full docs-mx-auto mb-4 sm:docs-mb-0 sm:docs-mr-4 sm:docs-ml-0" src={{user.avatar}} alt="{{user.avatar}} avatar">
+        <div class="docs-text-center sm:docs-text-left sm:docs-flex-grow">
+          <div class="docs-mb-4">
+            <p class="docs-text-large-3 docs-leading-tight">{{user.fullName}}</p>
+            <p class="docs-text-sm docs-leading-tight docs-text-grey-dark">Works at {{user.company.name}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="docs-flex docs-flex-wrap docs-justify-center docs-p-2">
+        {{#if friendsLoaded}}
+          <NeedsAsync @needs={{has-many user "friends"}} as |States|>
+            <States.loading>
+              {{fa-icon "spinner" spin=true class="docs-text-large-5"}}
+            </States.loading>
+            <States.loaded as |friends|>
+              {{#each friends as |friend|}}
+                <button {{action (pipe (action (mut userid) friend.id) (action (mut friendsLoaded) false))}}>
+                  <img src={{friend.avatar}} alt="{{friend.fullName}} avatar" class="docs-h-8 docs-rounded-full docs-mr-2">
+                </button>
+              {{/each}}
+            </States.loaded>
+          </NeedsAsync>
+        {{else}}
+          <button {{action (toggle "friendsLoaded" this)}} class="docs-text-sm docs-py-2 docs-font-semibold docs-rounded-full docs-bg-white">View Friends</button>
+        {{/if}}
+      </div>
+    </States.loaded>
+  </div>
+</NeedsAsync>
+

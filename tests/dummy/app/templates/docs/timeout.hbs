@@ -1,0 +1,22 @@
+<h1>timeout helper</h1>
+
+<p>The timeout helper takes a number (milliseconds) and an optional "value" (default true) and returns an ember concurrency task which will wait that many milliseconds and resolve to the "value". It is the same as the ember-concurrency timeout method.</p>
+
+{{#docs-demo as |demo|}}
+  {{#demo.example name="timeout-demo.hbs"}}
+
+    <h2>Egg Timer ⏲<</h2>
+    <NeedsAsync @needs={{timeout 5000 "Tasty 🥚🥚🥚🥚🥚"}} as |States|>
+      <States.loading>
+        Waiting for the eggs...
+      </States.loading>
+    
+      <States.loaded as |value|>
+        {{value}}
+      </States.loaded>
+    </NeedsAsync>
+
+  {{/demo.example}}
+
+  {{demo.snippet name="timeout-demo.hbs"}}
+{{/docs-demo}}
