@@ -5,7 +5,12 @@ const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 module.exports = function(defaults) {
   let app = new EmberAddon(defaults, {
     // Add options here
+    included(app) {
+      app.import('node_modules/ember-source/dist/ember-template-compiler.js');
+      app.import('vendor/ember/ember-template-compiler.js');
+    },
   });
+console.log(app);
 
   /*
     This build file specifies the options for the dummy test app of this
