@@ -1,0 +1,52 @@
+{{!-- render directory icon and name --}}
+{{#if @showFolders}}
+  <div class="docs-p-2 docs-h-12 docs-bg-white docs-flex docs-items-center">
+    {{fa-icon "folder-open"}}&nbsp;{{@folder.name}}
+  </div>
+{{/if}}
+
+<div class="{{if @showFolders 'docs-ml-4'}} {{if @debug 'docs-bg-grey docs-p-2 docs-border docs-border-1 docs-border-black docs-mb-2'}}">
+  {{!-- load this directory's files --}}
+  <NeedsAsync @needs={{has-many @folder "files"}} as |FilesTask|>
+      <FilesTask.loading>
+        <div class="docs-text-lg">
+          {{fa-icon "spinner" spin=true}} Loading {{@folder.name}} files
+        </div>
+      </FilesTask.loading>
+
+      {{!-- yield loaded files --}}
+      <FilesTask.loaded as |files|>
+        <div class="{{if @debug 'docs-bg-yellow docs-p-2 docs-border docs-border-1 docs-border-black'}}">
+          {{yield files}}
+        </div>
+      </FilesTask.loaded>
+  </NeedsAsync>
+
+  {{!-- load subdirectories --}}
+  <NeedsAsync @needs={{has-many @folder "folders"}} as |FoldersTask|>
+    <FoldersTask.loading>
+      <div class="docs-text-lg">
+        {{fa-icon "spinner" spin=true}} Loading {{@folder.name}} subfolders
+      </div>
+    </FoldersTask.loading>
+
+    {{!-- if allowed, recursively "open" subdirectories, otherwise render as closed --}}
+    <FoldersTask.loaded as |folders|>
+      {{#each folders as |folder|}}
+        {{#if nextLevel}}
+          <FolderRecursor @folder={{folder}} @level={{this.nextLevel}} @maxDepth={{this.maxDepth}} @debug={{@debug}} @showFolders={{@showFolders}} as |subfolders|>
+            <div class="{{if @debug 'docs-bg-black-lighter docs-p-2 docs-border docs-border-1 docs-border-grey'}}">
+              {{yield subfolders}}
+            </div>
+          </FolderRecursor>
+        {{else}}
+          {{#if @showFolders}}
+            <div class="docs-p-2 docs-h-12 docs-bg-white docs-flex docs-items-center">
+              {{fa-icon "folder"}}&nbsp;{{folder.name}}
+            </div>
+          {{/if}}
+        {{/if}}
+      {{/each}}
+    </FoldersTask.loaded>
+  </NeedsAsync>
+</div>

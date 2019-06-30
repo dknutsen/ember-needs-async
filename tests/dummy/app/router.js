@@ -14,6 +14,7 @@ Router.map(function() {
     this.route('non-blocking-models', function() {
       this.route('child', { path: '/:id' });
     });
+    this.route('recursor-component');
   });
   docsRoute(this, function() {
     this.route('index');
