@@ -39,4 +39,16 @@ module('Integration | Component | needs-async-state', function(hooks) {
 
     assert.equal(this.element.textContent.trim(), 'RENDER ME', 'it renders the loaded block from an empty hasMany');
   });
+
+  test('it fails gracefully if taskInstance is null', async function(assert) {
+    this.set('taskInstance', null);
+
+    await render(hbs`
+      {{#needs-async-state state="value" taskInstance=taskInstance as |value|}}
+        <div class="hello">{{value}}</div>
+      {{/needs-async-state}}
+    `);
+
+    assert.dom('.hello').doesNotExist();
+  });
 });

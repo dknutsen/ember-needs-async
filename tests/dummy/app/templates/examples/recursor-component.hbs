@@ -1,0 +1,54 @@
+<h1>"Recursive" data explorer component</h1>
+
+<p class="docs-pb-4">This is an example of a component pattern that can be used to "recursively" traverse a graph of data that uses self-referential relationships.</p>
+
+<div class="docs-w-full docs-flex docs-items-center docs-mb-4">
+  <div class="docs-flex docs-mr-8 docs-items-center">
+    <div class="docs-w-1/3">
+      <label for="max-depth">Max depth</label>
+    </div>
+    <div class="docs-w-2/3">
+      {{input
+        value=this.maxDepth
+        type="number" min=1 max=13
+        class="docs-p-2 docs-w-48 docs-border docs-border-grey"
+        placeholder="enter a user id"
+      }}
+    </div>
+  </div>
+  <div class="docs-mr-4">
+    <label class="docs-block">
+      <Input @type="checkbox" @checked={{this.showFolders}} />
+      <span>Show folders</span>
+    </label>
+  </div>
+  <div>
+    <label class="docs-block">
+      <Input @type="checkbox" @checked={{this.debug}} />
+      <span>"Debug" display mode</span>
+    </label>
+  </div>
+</div>
+
+
+<NeedsAsync @needs={{find-record "folder" "root"}} as |States|>
+  <States.loading>
+    <div class="docs-text-lg">
+      {{fa-icon "spinner" spin=true}} Loading root
+    </div>
+  </States.loading>
+  <States.loaded as |root|>
+
+    {{!-- "recursively" traverse the file tree starting with root --}}
+    <FolderRecursor @folder={{root}} @maxDepth={{this.maxDepth}} @debug={{this.debug}} @showFolders={{this.showFolders}} as |files|>
+      {{!-- render each yielded file --}}
+      {{#each files as |file|}}
+        <div class="docs-p-2 docs-h-12 docs-bg-white docs-flex docs-items-center">
+          {{fa-icon "file"}}&nbsp;{{file.name}}
+        </div>
+      {{/each}}
+    </FolderRecursor>
+
+  </States.loaded>
+</NeedsAsync>
+

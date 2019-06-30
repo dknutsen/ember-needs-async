@@ -31,4 +31,18 @@ export default function(server) {
     });
   });
   companies.forEach(c => c.save());
+
+  let foldersPerLevel = 3;
+  let treeGrower = (node, level=1, maxLevel=4) => {
+    server.createList('file', 2, { folder: node });
+    if (level === maxLevel) { return; }
+    let levelNodes = server.createList('folder', foldersPerLevel);
+    levelNodes.forEach(friend => {
+      node.folders.add(friend);
+      treeGrower(friend, level+1, maxLevel);
+    });
+    node.save();
+  };
+  let root = server.create('folder', { id: 'root', name: '/' });
+  treeGrower(root, 1);
 }

@@ -33,4 +33,9 @@ export default function() {
     });
     return filtered;
   });
+
+  this.get('/folders');
+  this.get('/folders/:id');
+  this.get('/files');
+  this.get('/files/:id');
 }

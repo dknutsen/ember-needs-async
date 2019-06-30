@@ -6,6 +6,6 @@ export default Component.extend({
   layout,
   tagName: '',
   isState: computed('taskInstance.{isRunning,value,error}', 'state', function() {
-    return !!get(this.taskInstance, this.state);
+    return this.taskInstance && !!get(this.taskInstance, this.state);
   })
 });

@@ -5,9 +5,6 @@ export default Route.extend({
   findRecordTask: task(function * (modelType, id, options) {
     return yield this.store.findRecord(modelType, id, options);
   }),
-  queryTask: task(function * (modelType, hash) {
-    return yield this.store.query(modelType, hash);
-  }),
 
   beforeModel(/*transition*/) {
     // wait to fetch our model until the parent model 'me' data is loaded
